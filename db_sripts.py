@@ -101,12 +101,27 @@ def add_links():
         answer = input("Connect Link? (y/n): ")
     close()
 
+def get_question_after(question_id = 0, quiz_id = 1):
+    open()
+    cursor.execute("""SELECT quiz_content.id, questions.question, questions.answer,
+                questions.wrong1, questions.wrong2, questions.wrong3
+                FROM quiz_content, questions
+                WHERE quiz_content.question_id == questions.id
+                AND quiz_content.id > ? AND quiz_content.quiz_id == ?
+                ORDER BY quiz_content.id""", [question_id, quiz_id])
+
+    result = cursor.fetchone()
+    close()
+    print(result)
+
+
 def main():
     #clear_db()
     #create()
     #add_quizes()
     #add_question()
-    add_links()
+    #add_links()
+    get_question_after(2, 1)
     pass
 
 
