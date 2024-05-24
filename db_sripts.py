@@ -114,6 +114,15 @@ def get_question_after(question_id = 0, quiz_id = 1):
     close()
     print(result)
 
+def get_quizes():
+    open()
+    cursor.execute("""SELECT * FROM quiz ORDER BY id""")
+    quizes = cursor.fetchall()
+    print(quizes)
+    close()
+    return quizes
+
+
 
 def main():
     #clear_db()
@@ -121,7 +130,8 @@ def main():
     #add_quizes()
     #add_question()
     #add_links()
-    get_question_after(2, 1)
+    #get_question_after(2, 1)
+    #get_quizes()
     pass
 
 

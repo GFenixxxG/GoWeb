@@ -1,4 +1,5 @@
-from flask import Flask, url_for, render_template, redirect, session
+from flask import Flask, request, url_for, render_template, redirect, session
+import db_sripts
 
 def startSession(quiz_id = 0):
     session['quiz'] = quiz_id
@@ -11,13 +12,21 @@ def startSession(quiz_id = 0):
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/', methods = ["GET", "POST"])
 @app.route("/index")
 
 def index():
-    return "<h1>Start Page</h1>"
+    if request.method == "GET":
+        startSession(-1)
+        quizes_list = db_sripts.get_quizes()
+        return render_template("index.html", quizes = quizes_list)
 
-@app.route("/test")
+    else:
+        quiz_id = request.form.get('quiz')
+        print(quiz_id)
+        return redirect(url_for('test'))
+
+@app.route("/test", methods = ["GET", "POST"])
 def test():
     return "<h1>Test Page</h1>"
 
