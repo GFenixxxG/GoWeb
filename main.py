@@ -1,5 +1,6 @@
 from flask import Flask, request, url_for, render_template, redirect, session
 import db_sripts
+from random import shuffle
 
 def startSession(quiz_id = 0):
     session['quiz'] = quiz_id
@@ -23,12 +24,31 @@ def index():
 
     else:
         quiz_id = request.form.get('quiz')
+        startSession(quiz_id)
         print(quiz_id)
         return redirect(url_for('test'))
 
+def question_form(question):
+    answer_list = [
+        question[2],
+        question[3],
+        question[4],
+        question[5],
+    ]
+    shuffle(answer_list)
+    return render_template("test.html", question_id = question[0], quest = question[1], ans_list = answer_list)
+
+
 @app.route("/test", methods = ["GET", "POST"])
 def test():
-    return "<h1>Test Page</h1>"
+    new_question = db_sripts.get_question_after(session['last_question'], session['quiz'])
+    if not ("quiz" in session) and session['quiz'] < 0:
+        return redirect(url_for("index"))
+    else:
+        if request.method == "GET":
+            print(new_question)
+            print(session)
+            return question_form(new_question)    
 
 @app.route("/result")
 def result():

@@ -1,16 +1,17 @@
+#Импорт біблеотеки
 import sqlite3
-
+#Назва бази данних
 db_name = "quiz.db"
-
+#Змінні для бд
 conn = None
 cursor = None
 
-
+#Відкриття бази данних
 def open():
     global conn, cursor
     conn = sqlite3.connect(db_name)
     cursor = conn.cursor()
-
+#Закриття бази данних
 def close():
     cursor.close()
     conn.close()
@@ -18,7 +19,7 @@ def close():
 def do(query):
     cursor.execute(query)
     conn.commit()
-
+#Создавання таблиць
 def create():
     open()
     do("""CREATE TABLE quiz(
@@ -41,7 +42,7 @@ def create():
             FOREIGN KEY (question_id) REFERENCES questions (id))""")
 
     close()
-
+#Очистка бази данних
 def clear_db():
     ''' видаляє всі таблиці '''
     open()
@@ -52,7 +53,7 @@ def clear_db():
     query = '''DROP TABLE IF EXISTS quiz_content'''
     do(query)
     close()
-
+#Вікторини
 def add_quizes():
     open()
     quizes = [
@@ -64,7 +65,7 @@ def add_quizes():
     cursor.executemany("""INSERT INTO quiz (name) VALUES (?)""", quizes)
     conn.commit()
     close()
-    
+#Запитання
 def add_question():
     questions = [
         ('Скільки місяців на рік мають 28 днів?', 'Всі', 'Один', 'Жодного', 'Два'),
@@ -88,7 +89,7 @@ def add_question():
     cursor.executemany("INSERT INTO questions (question, answer, wrong1, wrong2, wrong3) VALUES (?, ?, ?, ?, ?)", questions)
     conn.commit()
     close()
-
+#Добавляння звязків
 def add_links():
     open()
     cursor.execute("PRAGMA foreign_keys = on")
@@ -103,17 +104,19 @@ def add_links():
 
 def get_question_after(question_id = 0, quiz_id = 1):
     open()
-    cursor.execute("""SELECT quiz_content.id, questions.question, questions.answer,
-                questions.wrong1, questions.wrong2, questions.wrong3
-                FROM quiz_content, questions
-                WHERE quiz_content.question_id == questions.id
-                AND quiz_content.id > ? AND quiz_content.quiz_id == ?
-                ORDER BY quiz_content.id""", [question_id, quiz_id])
+    cursor.execute('''SELECT quiz_content.id, questions.question, questions.answer, 
+                   questions.wrong1, questions.wrong2, questions.wrong3
+                   FROM quiz_content, questions
+                   WHERE quiz_content.question_id == questions.id
+                   AND quiz_content.id > ? AND quiz_content.quiz_id == ?
+                   ORDER BY quiz_content.id''', [question_id, quiz_id])
 
     result = cursor.fetchone()
     close()
     print(result)
+    return result
 
+#Вибір вікторини
 def get_quizes():
     open()
     cursor.execute("""SELECT * FROM quiz ORDER BY id""")
@@ -123,7 +126,7 @@ def get_quizes():
     return quizes
 
 
-
+#Основна функція
 def main():
     #clear_db()
     #create()
