@@ -125,6 +125,43 @@ def get_quizes():
     close()
     return quizes
 
+def check_ans(answer, quest_id):
+    open()
+    cursor.execute("""
+        SELECT questions.answer
+        FROM quiz_content, questions
+        WHERE quiz_content.id == ?
+        AND quiz_content.question_id == questions.id""", [quest_id])
+    result = cursor.fetchone()
+    close()
+    if answer == result[0]:
+        return True
+    elif answer is None: 
+        return False
+    else:
+        return False
+
+def insert_quiz(quiz):
+    open()
+    cursor.execute("INSERT INTO quiz (name) VALUES (?)", [quiz])
+    conn.commit()
+    close()
+
+def insert_question(question_list):
+    open()
+    cursor.execute("INSERT INTO questions (question, answer, wrong1, wrong2, wrong3) VALUES (?, ?, ?, ?, ?)", question_list)
+    conn.commit()
+    close()
+
+def add_link(quiz_name):
+    open()
+    cursor.execute("SELECT id FROM quiz WHERE name == ?", [quiz_name])
+    quiz_id = cursor.fetchone()
+    cursor.execute("SELECT max(id) FROM questions")
+    question_id = cursor.fetchone()
+    cursor.execute("INSERT INTO quiz_content (quiz_id, question_id) VALUES (?, ?)", [quiz_id[0], question_id[0]])
+    conn.commit()
+    close()
 
 #Основна функція
 def main():

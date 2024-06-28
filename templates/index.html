@@ -4,21 +4,38 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- <link rel = "stylesheet" type="css" href="{{ url_for('static', filename = 'css/style.css') }}"> -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <title>Вибір вікторини</title>
     </head>
 
     <body>
-        <h1>Обери вікторину</h1>
-        <form method = "POST" action = "/">
-            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" select name = "quiz">
-            {% for id, name in quizes %}
-            <option value = "{{ id }}">{{ name }}</option>
-            {% endfor %}
-        </select>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="{{ url_for('index') }}">Головна</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ url_for('add_quiz') }}">Додати вікторину</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+          
+            <h1>Обери вікторину</h1>
+            <form method = "POST" action = "/">
+                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" select name = "quiz">
+                {% for id, name in quizes %}
+                <option value = "{{ id }}">{{ name }}</option>
+                {% endfor %}
+                </select>
+                <p><button type = "submit" class="btn btn-secondary">Обрать</button></p>
+            </form>
+            
 
-        <p><button type = "submit" class="btn btn-secondary">Обрать</button></p>
-
-        </form>
     </body>
 </html>
